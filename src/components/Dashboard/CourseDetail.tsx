@@ -10,7 +10,7 @@ interface CourseDetailProps {
 }
 
 export const CourseDetail = ({ course, onBack }: CourseDetailProps) => {
-  const { user } = useAuth();
+  const { user, updateUserProfile } = useAuth();
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [progress, setProgress] = useState<Progress | null>(null);
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
@@ -34,8 +34,9 @@ export const CourseDetail = ({ course, onBack }: CourseDetailProps) => {
 
   const handleEnroll = () => {
     if (user) {
-      const updatedCourses = [...user.enrolledCourses, course.id];
-      storage.updateUser(user.id, { enrolledCourses: updatedCourses });
+  const updatedCourses = [...user.enrolledCourses, course.id];
+  // update both context and storage
+  updateUserProfile({ enrolledCourses: updatedCourses });
 
       const updatedCourse = { ...course, enrolledStudents: [...course.enrolledStudents, user.id] };
       storage.saveCourse(updatedCourse);

@@ -125,12 +125,14 @@ export const storage = {
     localStorage.removeItem(STORAGE_KEYS.PROGRESS);
   },
 
-  // Initialize with sample data
+  // Initialize with sample data (only when storage is empty)
   initializeSampleData: (): void => {
-    // Clear existing data first
-    storage.clearAll();
-    
-      const sampleCourses: Course[] = [
+    // Only initialize if there are no courses and no users yet
+    if (storage.getCourses().length > 0 || storage.getUsers().length > 0) {
+      return;
+    }
+
+    const sampleCourses: Course[] = [
         {
           id: '1',
           title: 'Web Development Fundamentals',
